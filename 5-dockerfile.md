@@ -53,17 +53,20 @@ docker build -t <nombre imagen>:<tag> .
 ### Ejecutar el archivo Dockerfile y construir una imagen en la versión 1.0
 No olvides verificar en qué directorio se encuentra el archivo Dockerfile
 ```
-
+docker build -t miapache:1.0 .
 ```
 
 **¿Cuántos pasos se han ejecutado?**
-# RESPONDER 
+# RESPONDER
+Al intentar construir la imagen, Docker descargó la imagen base centos:7, pero el proceso falló en el paso *RUN yum update -y* debido a que los repositorios oficiales de CentOS 7 ya no están disponibles. Por este motivo, no se completaron todos los pasos del Dockerfile. Para solucionarlo, se actualizaron las URLs de los repositorios para apuntar a los repositorios de archivo.
 
 ### Inspeccionar la imagen creada
 # COMPLETAR CON UNA CAPTURA
+<img width="694" height="956" alt="image" src="https://github.com/user-attachments/assets/b0474901-1515-439d-8ec0-123504ebee87" />
 
 **Modificar el archivo index.html para incluir su nombre y luego crear una nueva versión de la imagen anterior**
 **¿Cuántos pasos se han ejecutado? ¿Observa algo diferente en la creación de la imagen**
+Se ejecutan 6 pasos, pero Docker reutiliza la caché de los primeros pasos. Solo la capa que copia los archivos se vuelve a construir.
 
 ## Mecanismo de caché
 Docker usa un mecanismo de caché cuando crea imágenes para acelerar el proceso de construcción y evitar la repetición de pasos que no han cambiado. Cada instrucción en un Dockerfile crea una capa en la imagen final. Docker intenta reutilizar las capas de una construcción anterior si no han cambiado, lo que reduce significativamente el tiempo de construcción.
@@ -75,14 +78,16 @@ Docker usa un mecanismo de caché cuando crea imágenes para acelerar el proceso
 
 ### Crear un contenedor a partir de las imagen creada, mapear todos los puertos
 ```
-
+docker run -d -p 8080:80 --name apache-container miapache:2.0
 ```
 
 ### ¿Con que puerto host se está realizando el mapeo?
 # COMPLETAR CON LA RESPUESTA
+El puerto host usado es 8080.
 
 **¿Qué es una imagen huérfana?**
 # COMPLETAR CON LA RESPUESTA
+Es una imagen sin nombre ni etiqueta que ya no está asociada a ningún contenedor o versión. Normalmente se generan cuando se reconstruyen imágenes y Docker deja capas viejas sin usar.
 
 ### Identificar imágenes huérfanas
 ```
